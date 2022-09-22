@@ -1,0 +1,10 @@
+[Unit]
+Description=Test Service for Java SDNOtify
+After=network.target
+
+[Service]
+Type=notify
+ExecStart=/home/jan/devel/sdnotify/build/distributions/sdnotify-1.0-SNAPSHOT/bin/sdnotify
+
+[Install]
+WantedBy=multi-user.target
