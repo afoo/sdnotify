@@ -91,7 +91,7 @@ public class SDNotify {
    * @param error a description of the error
    * @return if the message was successfully sent
    */
-  public static boolean bussError(String error) {
+  public static boolean busError(String error) {
     return send("BUSERROR=%s".formatted(error));
   }
 
