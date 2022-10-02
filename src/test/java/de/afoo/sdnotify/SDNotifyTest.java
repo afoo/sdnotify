@@ -116,7 +116,7 @@ class SDNotifyTest {
     public Server(File socketFile) throws IOException {
       FileUtils.touch(socketFile);
       sock = AFUNIXDatagramSocket.newInstance();
-      sock.setSoTimeout(1000);
+      sock.setSoTimeout(100);
       sock.bind(AFUNIXSocketAddress.of(socketFile));
       thread =
           new Thread(
