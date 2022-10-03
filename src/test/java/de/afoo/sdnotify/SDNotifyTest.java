@@ -85,11 +85,16 @@ class SDNotifyTest {
   }
 
   @Test
+  void testWatchdogTrigger() {
+    testMethod(SDNotify.watchdogTrigger(), "WATCHDOG=trigger");
+  }
+
+  @Test
   void testSocketMissing() throws InterruptedException {
-      environmentVariables.set("NOTIFY_SOCKET", "/does/not/exist");
-      assertFalse(SDNotify.ready());
-      server.join();
-      assertNull(server.received);
+    environmentVariables.set("NOTIFY_SOCKET", "/does/not/exist");
+    assertFalse(SDNotify.ready());
+    server.join();
+    assertNull(server.received);
   }
 
   @Test
@@ -109,26 +114,25 @@ class SDNotifyTest {
   }
 
   private static class Server {
-    private final AFUNIXDatagramSocket sock;
     private final Thread thread;
     private String received;
 
     public Server(File socketFile) throws IOException {
       FileUtils.touch(socketFile);
-      sock = AFUNIXDatagramSocket.newInstance();
+      var sock = AFUNIXDatagramSocket.newInstance();
       sock.setSoTimeout(100);
       sock.bind(AFUNIXSocketAddress.of(socketFile));
       thread =
           new Thread(
               () -> {
-                var buf = new byte[1024];
-                var pack = new DatagramPacket(buf, 1024);
                 try {
-                  sock.receive(pack);
+                  var buf = new byte[1024];
+                  var packet = new DatagramPacket(buf, 1024);
+                  sock.receive(packet);
+                  received = new String(buf, StandardCharsets.US_ASCII).trim();
                 } catch (IOException e) {
                   throw new RuntimeException(e);
                 }
-                received = new String(buf, StandardCharsets.US_ASCII).trim();
               });
     }
 

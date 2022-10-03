@@ -107,11 +107,20 @@ public class SDNotify {
   }
 
   /**
-   * Something something watchdog.
+   * Update the watchdog timestamp for services with WatchDogSec enabled.
    *
    * @return if the message was successfully sent
    */
   public static boolean watchdog() {
     return send("WATCHDOG=1");
+  }
+
+  /**
+   * An error that should be handled by the watchdog options occured.
+   *
+   * @return if the message was successfully sent
+   */
+  public static boolean watchdogTrigger() {
+    return send("WATCHDOG=trigger");
   }
 }
