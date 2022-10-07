@@ -139,6 +139,7 @@ class SDNotifyTest {
                   var packet = new DatagramPacket(buf, 1024);
                   sock.receive(packet);
                   received = new String(buf, StandardCharsets.US_ASCII).trim();
+                  sock.close();
                 } catch (IOException e) {
                   throw new RuntimeException(e);
                 }
