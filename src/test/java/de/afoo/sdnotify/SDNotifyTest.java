@@ -2,6 +2,7 @@ package de.afoo.sdnotify;
 
 import lombok.SneakyThrows;
 import org.apache.commons.io.FileUtils;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,6 +29,14 @@ class SDNotifyTest {
 
   private Server server;
   private File socketFile;
+
+  @BeforeAll
+  static void beforeAll() {
+    var isWindows = System.getProperty("os.name", "").startsWith("Windows");
+    if (isWindows) {
+      throw new RuntimeException("SDNotify tests do not work on Windows");
+    }
+  }
 
   @BeforeEach
   void beforeEach(@TempDir File tempDir) throws IOException {
