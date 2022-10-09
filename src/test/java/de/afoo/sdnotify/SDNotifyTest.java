@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -96,6 +97,11 @@ class SDNotifyTest {
   @Test
   void testWatchdogTrigger() {
     testMethod(SDNotify.watchdogTrigger(), "WATCHDOG=trigger");
+  }
+
+  @Test
+  void testExtentTimeout() {
+    testMethod(SDNotify.extendTimeout(Duration.ofSeconds(2)), "EXTEND_TIMEOUT_USEC=2000000");
   }
 
   @Test
