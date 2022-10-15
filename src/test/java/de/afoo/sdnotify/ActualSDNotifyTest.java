@@ -23,13 +23,15 @@ import java.util.Collections;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SystemStubsExtension.class)
-class SDNotifyTest {
+class ActualSDNotifyTest {
 
   @SystemStub
   private static final EnvironmentVariables environmentVariables = new EnvironmentVariables();
 
   private Server server;
   private File socketFile;
+
+  private ActualSDNotify sdNotify;
 
   @BeforeAll
   static void beforeAll() {
@@ -45,6 +47,7 @@ class SDNotifyTest {
     server = new Server(socketFile);
     server.run();
     environmentVariables.set("NOTIFY_SOCKET", socketFile.getAbsolutePath());
+    sdNotify = new ActualSDNotify();
   }
 
   @SneakyThrows
@@ -56,58 +59,58 @@ class SDNotifyTest {
 
   @Test
   void testReady() {
-    testMethod(SDNotify.ready(), "READY=1");
+    testMethod(sdNotify.ready(), "READY=1");
   }
 
   @Test
   void testStatus() {
-    testMethod(SDNotify.status("testing"), "STATUS=testing");
+    testMethod(sdNotify.status("testing"), "STATUS=testing");
   }
 
   @Test
   void testReloading() {
-    testMethod(SDNotify.reloading(), "RELOADING=1");
+    testMethod(sdNotify.reloading(), "RELOADING=1");
   }
 
   @Test
   void testStopping() {
-    testMethod(SDNotify.stopping(), "STOPPING=1");
+    testMethod(sdNotify.stopping(), "STOPPING=1");
   }
 
   @Test
   void testErrno() {
-    testMethod(SDNotify.errno(42), "ERRNO=42");
+    testMethod(sdNotify.errno(42), "ERRNO=42");
   }
 
   @Test
   void testBusError() {
-    testMethod(SDNotify.busError("test"), "BUSERROR=test");
+    testMethod(sdNotify.busError("test"), "BUSERROR=test");
   }
 
   @Test
   void testMainPid() {
-    testMethod(SDNotify.mainPid(42), "MAINPID=42");
+    testMethod(sdNotify.mainPid(42), "MAINPID=42");
   }
 
   @Test
   void testWatchdog() {
-    testMethod(SDNotify.watchdog(), "WATCHDOG=1");
+    testMethod(sdNotify.watchdog(), "WATCHDOG=1");
   }
 
   @Test
   void testWatchdogTrigger() {
-    testMethod(SDNotify.watchdogTrigger(), "WATCHDOG=trigger");
+    testMethod(sdNotify.watchdogTrigger(), "WATCHDOG=trigger");
   }
 
   @Test
   void testExtentTimeout() {
-    testMethod(SDNotify.extendTimeout(Duration.ofSeconds(2)), "EXTEND_TIMEOUT_USEC=2000000");
+    testMethod(sdNotify.extendTimeout(Duration.ofSeconds(2)), "EXTEND_TIMEOUT_USEC=2000000");
   }
 
   @Test
   void testSocketMissing() throws InterruptedException {
     environmentVariables.set("NOTIFY_SOCKET", "/does/not/exist");
-    assertFalse(SDNotify.ready());
+    assertFalse(sdNotify.ready());
     server.join();
     assertNull(server.received);
   }
@@ -115,7 +118,7 @@ class SDNotifyTest {
   @Test
   void testEnvironmentMissing() throws InterruptedException {
     environmentVariables.set("NOTIFY_SOCKET", null);
-    assertFalse(SDNotify.ready());
+    assertFalse(sdNotify.ready());
     server.join();
     assertNull(server.received);
   }
@@ -125,7 +128,7 @@ class SDNotifyTest {
     server.join();
     assertTrue(socketFile.delete());
     FileUtils.writeLines(socketFile, Collections.singleton("foo"));
-    assertFalse(SDNotify.ready());
+    assertFalse(sdNotify.ready());
   }
 
   private static class Server {

@@ -1,13 +1,22 @@
 plugins {
     id 'java-library'
+    id 'maven-publish'
 }
 
 group 'de.afoo'
-version '1.0-SNAPSHOT'
+version '1.0-beta1'
 
 java {
     withSourcesJar()
     withJavadocJar()
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+        }
+    }
 }
 
 repositories {
