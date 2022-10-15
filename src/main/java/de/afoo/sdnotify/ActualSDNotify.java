@@ -9,12 +9,7 @@ import java.net.DatagramPacket;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 
-/**
- * Collection of static methods to send Notifications to systemd.
- *
- * <p>See <a
- * href="https://www.freedesktop.org/software/systemd/man/sd_notify.html">https://www.freedesktop.org/software/systemd/man/sd_notify.html</a>.
- */
+/** This implementation of <code>SDNotify</code> actually tries to talk to systemd. */
 @Slf4j
 public class ActualSDNotify implements SDNotify {
 

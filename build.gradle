@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'de.afoo'
-version '1.0-beta1'
+version '1.0-beta2'
 
 java {
     withSourcesJar()
@@ -15,7 +15,23 @@ publishing {
     publications {
         maven(MavenPublication) {
             from components.java
+            pom {
+                licenses {
+                    license {
+                        name = 'MIT No Attribution License'
+                        url = 'https://opensource.org/licenses/MIT-0'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'afoo'
+                        name = 'Jan Hülsbergen'
+                        email = 'jan@huelsbergen.de'
+                    }
+                }
+            }
         }
+
     }
 }
 

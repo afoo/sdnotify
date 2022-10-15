@@ -2,6 +2,12 @@ package de.afoo.sdnotify;
 
 import java.time.Duration;
 
+/**
+ * Send Notifications to systemd.
+ *
+ * <p>See <a
+ * href="https://www.freedesktop.org/software/systemd/man/sd_notify.html">https://www.freedesktop.org/software/systemd/man/sd_notify.html</a>.
+ */
 public interface SDNotify {
   /**
    * Create a new SDNotify instance. Returns a NOOP Variant if the <code>NOTIFY_SOCKET</code>
