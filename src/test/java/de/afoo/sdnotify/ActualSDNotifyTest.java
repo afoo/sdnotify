@@ -103,7 +103,7 @@ class ActualSDNotifyTest {
   }
 
   @Test
-  void testExtentTimeout() {
+  void testExtendTimeout() {
     testMethod(sdNotify.extendTimeout(Duration.ofSeconds(2)), "EXTEND_TIMEOUT_USEC=2000000");
   }
 

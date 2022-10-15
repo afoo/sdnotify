@@ -10,11 +10,10 @@ public interface SDNotify {
    * @return an appropriate SDNotify instance
    */
   static SDNotify create() {
-    var socketEnv = System.getenv("NOTIFY_SOCKET");
-    if (socketEnv == null || socketEnv.isBlank()) {
-      return new NOOPSDNotify();
+    if (SDNotifySocketFile.exists()) {
+      return new ActualSDNotify();
     }
-    return new ActualSDNotify();
+    return new NOOPSDNotify();
   }
 
   /**

@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.newsclub.net.unix.AFUNIXDatagramSocket;
 import org.newsclub.net.unix.AFUNIXSocketAddress;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.time.Duration;
@@ -20,12 +19,11 @@ import java.time.temporal.ChronoUnit;
 public class ActualSDNotify implements SDNotify {
 
   private boolean send(String message) {
-    var notifySocketFileName = System.getenv("NOTIFY_SOCKET");
-    if (notifySocketFileName == null) {
+    var notifySocketFile = SDNotifySocketFile.get();
+    if (notifySocketFile == null) {
       log.error("Could not send SD_NOTIFY message: NOTIFY_SOCKET environment variable not set.");
       return false;
     }
-    var notifySocketFile = new File(notifySocketFileName);
     if (!notifySocketFile.exists()) {
       log.error(
           "Could not send SD_NOTIFY message: {} does not exist.",
