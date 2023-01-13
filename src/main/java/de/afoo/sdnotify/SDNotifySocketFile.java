@@ -17,7 +17,7 @@ public class SDNotifySocketFile {
    * @return the UNIX socket or <code>null</code>
    */
   public static File get() {
-    var env = System.getenv("NOTIFY_SOCKET");
+    String env = System.getenv("NOTIFY_SOCKET");
     if (env == null) {
       return null;
     }
@@ -30,7 +30,7 @@ public class SDNotifySocketFile {
    * @return if the socket exists
    */
   public static boolean exists() {
-    var f = get();
+    File f = get();
     return f != null && f.exists();
   }
 }

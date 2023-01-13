@@ -26,7 +26,7 @@ class SDNotifyTest {
         setSocket("foo");
         assertInstanceOf(NOOPSDNotify.class, SDNotify.create());
 
-        var file = new File(tempDir, "foo");
+        File file = new File(tempDir, "foo");
         setSocket(file.getAbsolutePath());
         assertTrue(file.createNewFile());
         assertInstanceOf(ActualSDNotify.class, SDNotify.create());
