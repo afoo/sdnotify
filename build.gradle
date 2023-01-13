@@ -84,7 +84,7 @@ test {
 
 jacocoTestReport {
     reports {
-        xml.enabled true
-        csv.enabled false
+        xml.required = true
+        csv.required = false
     }
 }
