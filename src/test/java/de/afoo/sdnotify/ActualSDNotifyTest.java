@@ -1,6 +1,5 @@
 package de.afoo.sdnotify;
 
-import lombok.SneakyThrows;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,7 +34,7 @@ class ActualSDNotifyTest {
 
   @BeforeAll
   static void beforeAll() {
-    var isWindows = System.getProperty("os.name", "").startsWith("Windows");
+    boolean isWindows = System.getProperty("os.name", "").startsWith("Windows");
     if (isWindows) {
       throw new RuntimeException("SDNotify tests do not work on Windows");
     }
@@ -50,10 +49,13 @@ class ActualSDNotifyTest {
     sdNotify = new ActualSDNotify();
   }
 
-  @SneakyThrows
   private void testMethod(boolean result, String expectedReply) {
     assertTrue(result);
-    server.join();
+    try {
+      server.join();
+    } catch (InterruptedException e) {
+      throw new RuntimeException(e);
+    }
     assertEquals(expectedReply, server.received);
   }
 
@@ -137,15 +139,15 @@ class ActualSDNotifyTest {
 
     public Server(File socketFile) throws IOException {
       FileUtils.touch(socketFile);
-      var sock = AFUNIXDatagramSocket.newInstance();
+      AFUNIXDatagramSocket sock = AFUNIXDatagramSocket.newInstance();
       sock.setSoTimeout(100);
       sock.bind(AFUNIXSocketAddress.of(socketFile));
       thread =
           new Thread(
               () -> {
                 try {
-                  var buf = new byte[1024];
-                  var packet = new DatagramPacket(buf, 1024);
+                  byte[] buf = new byte[1024];
+                  DatagramPacket packet = new DatagramPacket(buf, 1024);
                   sock.receive(packet);
                   received = new String(buf, StandardCharsets.US_ASCII).trim();
                   sock.close();

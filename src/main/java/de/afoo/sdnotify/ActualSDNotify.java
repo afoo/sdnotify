@@ -1,20 +1,22 @@
 package de.afoo.sdnotify;
 
-import lombok.extern.slf4j.Slf4j;
 import org.newsclub.net.unix.AFUNIXDatagramSocket;
 import org.newsclub.net.unix.AFUNIXSocketAddress;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.time.Duration;
-import java.time.temporal.ChronoUnit;
+import java.util.concurrent.TimeUnit;
 
 /** This implementation of <code>SDNotify</code> actually tries to talk to systemd. */
-@Slf4j
 public class ActualSDNotify implements SDNotify {
+  private static final Logger log = LoggerFactory.getLogger(SDNotify.class);
 
   private boolean send(String message) {
-    var notifySocketFile = SDNotifySocketFile.get();
+    File notifySocketFile = SDNotifySocketFile.get();
     if (notifySocketFile == null) {
       log.error("Could not send SD_NOTIFY message: NOTIFY_SOCKET environment variable not set.");
       return false;
@@ -26,7 +28,7 @@ public class ActualSDNotify implements SDNotify {
       return false;
     }
     try (AFUNIXDatagramSocket sock = AFUNIXDatagramSocket.newInstance()) {
-      var addr = AFUNIXSocketAddress.of(notifySocketFile);
+      AFUNIXSocketAddress addr = AFUNIXSocketAddress.of(notifySocketFile);
       sock.connect(addr);
       sock.send(new DatagramPacket(message.getBytes(), message.length()));
       return true;
@@ -37,7 +39,7 @@ public class ActualSDNotify implements SDNotify {
   }
 
   private long getMicroseconds(Duration duration) {
-    return duration.dividedBy(ChronoUnit.MICROS.getDuration());
+    return TimeUnit.NANOSECONDS.toMicros(duration.toNanos());
   }
 
   @Override
@@ -47,7 +49,7 @@ public class ActualSDNotify implements SDNotify {
 
   @Override
   public boolean status(String message) {
-    return send("STATUS=%s".formatted(message));
+    return send(String.format("STATUS=%s", message));
   }
 
   @Override
@@ -62,17 +64,17 @@ public class ActualSDNotify implements SDNotify {
 
   @Override
   public boolean errno(int errno) {
-    return send("ERRNO=%d".formatted(errno));
+    return send(String.format("ERRNO=%d", errno));
   }
 
   @Override
   public boolean busError(String error) {
-    return send("BUSERROR=%s".formatted(error));
+    return send(String.format("BUSERROR=%s", error));
   }
 
   @Override
   public boolean mainPid(int pid) {
-    return send("MAINPID=%d".formatted(pid));
+    return send(String.format("MAINPID=%d", pid));
   }
 
   @Override
@@ -87,6 +89,6 @@ public class ActualSDNotify implements SDNotify {
 
   @Override
   public boolean extendTimeout(Duration duration) {
-    return send("EXTEND_TIMEOUT_USEC=%d".formatted(getMicroseconds(duration)));
+    return send(String.format("EXTEND_TIMEOUT_USEC=%d", getMicroseconds(duration)));
   }
 }
