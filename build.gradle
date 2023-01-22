@@ -6,7 +6,7 @@ plugins {
 }
 
 group 'de.afoo'
-version '1.0-beta5'
+version '1.0-beta6'
 
 java {
     withSourcesJar()
