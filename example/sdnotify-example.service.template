@@ -1,0 +1,10 @@
+[Unit]
+Description=Example Service for Java SDNotify
+After=network.target
+
+[Service]
+Type=notify
+ExecStart=${appPath}
+
+[Install]
+WantedBy=multi-user.target

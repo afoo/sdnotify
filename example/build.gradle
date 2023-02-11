@@ -1,0 +1,47 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group 'de.afoo.sdnotifyexample'
+version '1.0-SNAPSHOT'
+
+application {
+    mainClass = 'de.afoo.sdnotifyexample.Main'
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        url 'https://git.afoo.at/api/packages/jan/maven'
+    }
+}
+
+dependencies {
+    implementation 'de.afoo:sdnotify:1.0-beta6'
+}
+
+clean.doFirst {
+    delete 'app/'
+}
+
+tasks.register('unpackApp', Copy) {
+    dependsOn distZip
+    from zipTree('build/distributions/example-1.0-SNAPSHOT.zip')
+    into 'app'
+}
+
+tasks.register('installService', Copy) {
+    dependsOn unpackApp
+    from 'sdnotify-example.service.template'
+    into "${System.properties['user.home']}/.config/systemd/user"
+    rename '(.*)\\.template', '$1'
+    expand appPath: "${projectDir}/app/example-1.0-SNAPSHOT/bin/example"
+    doLast {
+        println '\n# now do:'
+        println "systemctl --user daemon-reload"
+        println 'systemctl --user start sdnotify-example'
+        println '\n# observe with:'
+        println 'watch -n 1 systemctl --user status sdnotify-example'
+    }
+}
