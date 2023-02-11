@@ -1,21 +1,24 @@
 package de.afoo.sdnotifyexample;
 
 import de.afoo.sdnotify.SDNotify;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sun.misc.Signal;
 
 public class Main {
+  private static final Logger log = LoggerFactory.getLogger(Main.class);
   private static final SDNotify sdNotify = SDNotify.create();
 
   private static void setStatus(String status) {
     sdNotify.status(status);
-    System.out.println(status);
+    log.info(status);
   }
 
   private static void sleep(int seconds) {
     try {
       Thread.sleep(seconds * 1000);
     } catch (InterruptedException e) {
-      sdNotify.status("gracefully interrupted");
+      setStatus("gracefully interrupted");
       System.exit(0);
     }
   }
@@ -25,7 +28,7 @@ public class Main {
       setStatus("shutting down");
       sdNotify.stopping();
       sleep(5);
-      sdNotify.status("stopped");
+      setStatus("stopped");
       System.exit(0);
     });
     sleep(5);
