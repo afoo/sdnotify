@@ -23,6 +23,7 @@ public class Main {
     }
   }
   public static void main(String[] args)  {
+    System.nanoTime()
     setStatus("starting up");
     Signal.handle(new Signal("TERM"), (signal) -> {
       setStatus("shutting down");
@@ -30,6 +31,10 @@ public class Main {
       sleep(5);
       setStatus("stopped");
       System.exit(0);
+    });
+    Signal.handle(new Signal("HUP"), (signal) -> {
+      setStatus("reloading");
+      sdNotify.reloading();
     });
     sleep(5);
     sdNotify.ready();
