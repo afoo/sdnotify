@@ -1,5 +1,13 @@
 package de.afoo.sdnotify;
 
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.util.Collections;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,15 +19,6 @@ import org.newsclub.net.unix.AFUNIXSocketAddress;
 import uk.org.webcompere.systemstubs.environment.EnvironmentVariables;
 import uk.org.webcompere.systemstubs.jupiter.SystemStub;
 import uk.org.webcompere.systemstubs.jupiter.SystemStubsExtension;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.DatagramPacket;
-import java.nio.charset.StandardCharsets;
-import java.time.Duration;
-import java.util.Collections;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SystemStubsExtension.class)
 class ActualSDNotifyTest {
@@ -56,7 +55,7 @@ class ActualSDNotifyTest {
     } catch (InterruptedException e) {
       throw new RuntimeException(e);
     }
-    assertEquals(expectedReply, server.received);
+    assertEquals(expectedReply, server.getReceived());
   }
 
   @Test
@@ -70,8 +69,11 @@ class ActualSDNotifyTest {
   }
 
   @Test
-  void testReloading() {
-    testMethod(sdNotify.reloading(), "RELOADING=1");
+  void testReloading() throws InterruptedException {
+    assertTrue(sdNotify.reloading());
+    server.join();
+    String received = server.getReceived();
+    assertTrue(received.startsWith("RELOADING=1\nMONOTONIC_USEC="));
   }
 
   @Test
@@ -114,7 +116,7 @@ class ActualSDNotifyTest {
     environmentVariables.set("NOTIFY_SOCKET", "/does/not/exist");
     assertFalse(sdNotify.ready());
     server.join();
-    assertNull(server.received);
+    assertEquals("", server.getReceived());
   }
 
   @Test
@@ -122,7 +124,7 @@ class ActualSDNotifyTest {
     environmentVariables.set("NOTIFY_SOCKET", null);
     assertFalse(sdNotify.ready());
     server.join();
-    assertNull(server.received);
+    assertEquals("", server.getReceived());
   }
 
   @Test
@@ -135,7 +137,9 @@ class ActualSDNotifyTest {
 
   private static class Server {
     private final Thread thread;
-    private String received;
+    private final StringBuilder received = new StringBuilder();
+
+    public int expectedPackets = 1;
 
     public Server(File socketFile) throws IOException {
       FileUtils.touch(socketFile);
@@ -145,15 +149,17 @@ class ActualSDNotifyTest {
       thread =
           new Thread(
               () -> {
-                try {
-                  byte[] buf = new byte[1024];
-                  DatagramPacket packet = new DatagramPacket(buf, 1024);
-                  sock.receive(packet);
-                  received = new String(buf, StandardCharsets.US_ASCII).trim();
-                  sock.close();
-                } catch (IOException e) {
-                  throw new RuntimeException(e);
+                for (int i = 0; i < expectedPackets; i++) {
+                  try {
+                    byte[] buf = new byte[1024];
+                    DatagramPacket packet = new DatagramPacket(buf, 1024);
+                    sock.receive(packet);
+                    received.append(new String(buf, StandardCharsets.US_ASCII).trim());
+                  } catch (IOException e) {
+                    throw new RuntimeException(e);
+                  }
                 }
+                sock.close();
               });
     }
 
@@ -163,6 +169,10 @@ class ActualSDNotifyTest {
 
     public void join() throws InterruptedException {
       thread.join();
+    }
+
+    public String getReceived() {
+      return received.toString();
     }
   }
 }

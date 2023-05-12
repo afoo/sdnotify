@@ -1,15 +1,14 @@
 package de.afoo.sdnotify;
 
-import org.newsclub.net.unix.AFUNIXDatagramSocket;
-import org.newsclub.net.unix.AFUNIXSocketAddress;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
+import org.newsclub.net.unix.AFUNIXDatagramSocket;
+import org.newsclub.net.unix.AFUNIXSocketAddress;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** This implementation of <code>SDNotify</code> actually tries to talk to systemd. */
 public class ActualSDNotify implements SDNotify {
@@ -54,7 +53,7 @@ public class ActualSDNotify implements SDNotify {
 
   @Override
   public boolean reloading() {
-    return send("RELOADING=1");
+    return send(String.format("RELOADING=1\nMONOTONIC_USEC=%d", System.nanoTime() / 1000));
   }
 
   @Override
