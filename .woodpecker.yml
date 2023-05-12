@@ -17,3 +17,9 @@ pipeline:
     commands:
       - ./gradlew build test
 
+  testexample:
+    group: test
+    image: eclipse-temurin:17
+    commands:
+      - ./gradlew build
+
