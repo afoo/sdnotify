@@ -3,8 +3,10 @@ Description=Example Service for Java SDNotify
 After=network.target
 
 [Service]
-Type=notify
+Type=notify-reload
 ExecStart=${appPath}
+WatchdogSec=5
+Restart=always
 
 [Install]
 WantedBy=multi-user.target

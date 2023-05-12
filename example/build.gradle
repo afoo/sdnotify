@@ -18,7 +18,10 @@ repositories {
 }
 
 dependencies {
-    implementation 'de.afoo:sdnotify:1.0-beta6'
+    //implementation 'de.afoo:sdnotify:1.0-beta6'
+    implementation files('../build/libs/sdnotify-1.0-beta6.jar')
+    implementation 'com.kohlschutter.junixsocket:junixsocket-core:2.6.2'
+
     implementation 'org.slf4j:slf4j-simple:2.0.6'
 }
 
