@@ -1,6 +1,5 @@
 steps:
   test:
-    group: test
     image: eclipse-temurin:17
     commands:
       - ./gradlew build test
