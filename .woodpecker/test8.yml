@@ -1,0 +1,6 @@
+steps:
+  test:
+    group: test
+    image: eclipse-temurin:8
+    commands:
+      - ./gradlew build test
