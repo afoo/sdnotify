@@ -1,4 +1,4 @@
-pipeline:
+steps:
   test8:
     group: test
     image: eclipse-temurin:8
@@ -11,9 +11,9 @@ pipeline:
     commands:
       - ./gradlew build test
 
-  test20:
+  test21:
     group: test
-    image: eclipse-temurin:20
+    image: eclipse-temurin:21
     commands:
       - ./gradlew build test
 
