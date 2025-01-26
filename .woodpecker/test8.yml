@@ -1,3 +1,6 @@
+when:
+  event: push
+
 steps:
   test:
     image: eclipse-temurin:8
