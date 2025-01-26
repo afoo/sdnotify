@@ -1,8 +1,0 @@
-when:
-  event: push
-
-steps:
-  test:
-    image: eclipse-temurin:8
-    commands:
-      - ./gradlew build test
