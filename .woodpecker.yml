@@ -2,15 +2,15 @@ when:
   event: push
 
 steps:
-  test11:
-    image: eclipse-temurin:11
-    commands:
-      - ./gradlew build test
   test17:
     image: eclipse-temurin:17
     commands:
-      - ./gradlew build test
+      - ./gradlew clean build test
   test21:
     image: eclipse-temurin:21
     commands:
-      - ./gradlew build test
+      - ./gradlew clean build test
+  test24:
+    image: eclipse-temurin:24
+    commands:
+      - ./gradlew clean build test

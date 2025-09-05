@@ -1,6 +1,6 @@
 # SDNotify
 
-A simple library for Java 11+ implementing the [sd_notify](https://www.freedesktop.org/software/systemd/man/sd_notify.html) protocol from systemd.
+A simple library for Java 17+ implementing the [sd_notify](https://www.freedesktop.org/software/systemd/man/sd_notify.html) protocol from systemd.
 
 ```xml
 <dependency>
