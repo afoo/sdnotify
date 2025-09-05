@@ -27,7 +27,7 @@ public class SDNotifySocketFile {
   /**
    * Check if the UNIX socket to communicate with systemd exists.
    *
-   * @return if the socket exists
+   * @return true if the socket exists
    */
   public static boolean exists() {
     File f = get();

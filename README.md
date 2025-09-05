@@ -6,12 +6,12 @@ A simple library for Java 17+ implementing the [sd_notify](https://www.freedeskt
 <dependency>
     <groupId>de.afoo</groupId>
     <artifactId>sdnotify</artifactId>
-    <version>1.0-beta7</version>
+    <version>1.0</version>
 </dependency>
 ```
 
 ```groovy
-implementation 'de.afoo:sdnotify:1.0-beta7'
+implementation 'de.afoo:sdnotify:1.0'
 ```
 
 ## Usage

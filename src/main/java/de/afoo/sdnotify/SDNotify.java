@@ -26,7 +26,7 @@ public interface SDNotify {
    * Notify systemd that the service has started successfully. This has to be sent for services of
    * Type=notify to be considered running by systemd.
    *
-   * @return if the message was successfully sent
+   * @return true if the message was successfully sent
    */
   boolean ready();
 
@@ -34,7 +34,7 @@ public interface SDNotify {
    * Send a free form status message to systemd.
    *
    * @param message the message to be sent
-   * @return if the message was successfully sent
+   * @return true if the message was successfully sent
    */
   boolean status(String message);
 
@@ -42,14 +42,14 @@ public interface SDNotify {
    * Notify systemd that the service is currently reloading. {@link #ready()} must be called once
    * this reloading has finished.
    *
-   * @return if the message was successfully sent
+   * @return true if the message was successfully sent
    */
   boolean reloading();
 
   /**
    * Notify systemd that the service is stopping.
    *
-   * @return if the message was successfully sent
+   * @return true if the message was successfully sent
    */
   boolean stopping();
 
@@ -57,7 +57,7 @@ public interface SDNotify {
    * Notify systemd that an error has occurred.
    *
    * @param errno the ERRNO of the error
-   * @return if the message was successfully sent
+   * @return true if the message was successfully sent
    */
   boolean errno(int errno);
 
@@ -65,7 +65,7 @@ public interface SDNotify {
    * Notify systemd that a D-Bus error has occurred.
    *
    * @param error a description of the error
-   * @return if the message was successfully sent
+   * @return true if the message was successfully sent
    */
   boolean busError(String error);
 
@@ -74,21 +74,21 @@ public interface SDNotify {
    * circumstances.
    *
    * @param pid the main pic
-   * @return if the message was successfully sent
+   * @return true if the message was successfully sent
    */
   boolean mainPid(int pid);
 
   /**
    * Update the watchdog timestamp for services with WatchDogSec enabled.
    *
-   * @return if the message was successfully sent
+   * @return true if the message was successfully sent
    */
   boolean watchdog();
 
   /**
    * An error that should be handled by the watchdog options occured.
    *
-   * @return if the message was successfully sent
+   * @return true if the message was successfully sent
    */
   boolean watchdogTrigger();
 
@@ -97,7 +97,7 @@ public interface SDNotify {
    * corresponding the current state.
    *
    * @param duration the new value of the timeout
-   * @return if the message was successfully sent
+   * @return true if the message was successfully sent
    */
   boolean extendTimeout(Duration duration);
 }
